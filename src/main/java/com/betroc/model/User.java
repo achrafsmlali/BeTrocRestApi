@@ -1,4 +1,4 @@
-package com.betroc.user;
+package com.betroc.model;
 
 import org.hibernate.annotations.NaturalId;
 import javax.persistence.*;
