@@ -1,4 +1,4 @@
-package com.betroc.auth.security;
+package com.betroc.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

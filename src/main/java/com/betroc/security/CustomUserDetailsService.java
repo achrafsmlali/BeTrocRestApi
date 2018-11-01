@@ -1,4 +1,4 @@
-package com.betroc.auth.security;
+package com.betroc.security;
 
 import com.betroc.model.User;
 import com.betroc.repository.UserRepository;

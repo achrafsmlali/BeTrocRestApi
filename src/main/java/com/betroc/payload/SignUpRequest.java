@@ -1,4 +1,4 @@
-package com.betroc.auth.payload;
+package com.betroc.payload;
 
 
 import javax.validation.constraints.*;

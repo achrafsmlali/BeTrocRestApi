@@ -1,4 +1,4 @@
-package com.betroc.auth.payload;
+package com.betroc.payload;
 
 
 public class JwtAuthenticationResponse {

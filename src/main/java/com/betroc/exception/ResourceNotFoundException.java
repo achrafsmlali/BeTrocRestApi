@@ -1,4 +1,4 @@
-package com.betroc.auth.exception;
+package com.betroc.exception;
 
 
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package com.betroc.auth.security;
+package com.betroc.security;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import java.lang.annotation.*;

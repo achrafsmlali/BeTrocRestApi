@@ -1,12 +1,11 @@
-package com.betroc.auth.config;
+package com.betroc.config;
 
-import com.betroc.auth.security.CustomUserDetailsService;
-import com.betroc.auth.security.JwtAuthenticationEntryPoint;
-import com.betroc.auth.security.JwtAuthenticationFilter;
+import com.betroc.security.CustomUserDetailsService;
+import com.betroc.security.JwtAuthenticationEntryPoint;
+import com.betroc.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -20,11 +19,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration //the class will be used JavaConfig as a source of bean definitions
-@EnableWebSecurity
+@EnableWebSecurity //enable web security in a project.
 @EnableGlobalMethodSecurity(
-        securedEnabled = true //enable the @Secured used to protect controller/serivce/methode
-//        jsr250Enabled = true,
-//        prePostEnabled = true
+        securedEnabled = true, //enable the @Secured used to protect controller/serivce/methode
+        jsr250Enabled = true,
+        prePostEnabled = true
 )
 public class SecurityConfig extends WebSecurityConfigurerAdapter { // WSCA provides default security configurations
     @Autowired
@@ -80,11 +79,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // WSCA provi
                         "/**/*.css",
                         "/**/*.js")
                 .permitAll()
-                .antMatchers("/api/auth/**")
-                .permitAll()
-                .antMatchers("/api/user/checkUsernameAvailability", "/api/user/checkEmailAvailability")
-                .permitAll()
-                .antMatchers(HttpMethod.GET, "/api/polls/**", "/api/users/**")
+                .antMatchers("/api/auth/**")// /api/auth/** is accessible without auth
                 .permitAll()
                 .anyRequest()
                 .authenticated();

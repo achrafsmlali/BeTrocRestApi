@@ -1,4 +1,4 @@
-package com.betroc.auth.security;
+package com.betroc.security;
 
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
@@ -13,7 +13,7 @@ public class JwtTokenProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 
-    @Value("${app.jwtSecret}")
+    @Value(" ${app.jwtSecret}")
     private String jwtSecret;
 
     @Value("${app.jwtExpirationInMs}")
