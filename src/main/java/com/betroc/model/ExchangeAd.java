@@ -9,7 +9,8 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Entity
-public class AdExchange extends Advertisement{
+@DiscriminatorValue("Exchange")
+public class ExchangeAd extends Advertisement{
 
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,11 +27,11 @@ public class AdExchange extends Advertisement{
 
     private float estimatedPrice;
 
-    public AdExchange(){
+    public ExchangeAd(){
 
     }
 
-    public AdExchange(@NotNull String email, float estimatedPrice) {
+    public ExchangeAd(@NotNull String email, float estimatedPrice) {
         super(email);
         this.estimatedPrice = estimatedPrice;
     }
