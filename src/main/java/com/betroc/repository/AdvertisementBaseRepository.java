@@ -10,7 +10,7 @@ import java.util.List;
 @NoRepositoryBean
 public interface AdvertisementBaseRepository <T extends Advertisement> extends JpaRepository<T ,Long> {
 
-    public T findByEmail(String email);
+//    public T findByEmail(String email);
 
 
 }

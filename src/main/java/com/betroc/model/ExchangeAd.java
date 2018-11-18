@@ -1,39 +1,26 @@
 package com.betroc.model;
 
-import org.hibernate.annotations.CreationTimestamp;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.Date;
 
 @Entity
 @DiscriminatorValue("Exchange")
 public class ExchangeAd extends Advertisement{
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private int id;
-//
-//    @NotBlank
-//    @Size(max = 100)
-//    private String title;
-//
-//    @NotBlank
-//    @Size(max = 1500)
-//    private String description;
-//
+    @Enumerated(EnumType.STRING)
+    private State state;
+
 
     private float estimatedPrice;
 
-    public ExchangeAd(){
+    @Column(columnDefinition = "TEXT")
+    private String address;
 
+    public State getState() {
+        return state;
     }
 
-    public ExchangeAd(@NotNull String email, float estimatedPrice) {
-        super(email);
-        this.estimatedPrice = estimatedPrice;
+    public void setState(State state) {
+        this.state = state;
     }
 
     public float getEstimatedPrice() {
@@ -44,63 +31,11 @@ public class ExchangeAd extends Advertisement{
         this.estimatedPrice = estimatedPrice;
     }
 
-    //
-//    @Temporal( TemporalType.TIMESTAMP )
-//    @CreationTimestamp
-//    private Date creationDate;
-//    @NotBlank
-//    private String adress;
-////    private int userId;
-////    private int categoryId;
-////    private String Etat;
-////
-//
-//
-//    public int getId() {
-//        return id;
-//    }
-//
-//    public void setId(int id) {
-//        this.id = id;
-//    }
-//
-//    public String getTitle() {
-//        return title;
-//    }
-//
-//    public void setTitle(String title) {
-//        this.title = title;
-//    }
-//
-//    public String getDescription() {
-//        return description;
-//    }
-//
-//    public void setDescription(String description) {
-//        this.description = description;
-//    }
-//
-//    public float getEstimatedPrice() {
-//        return estimatedPrice;
-//    }
-//
-//    public void setEstimatedPrice(float estimatedPrice) {
-//        this.estimatedPrice = estimatedPrice;
-//    }
-//
-//    public Date getCreationDate() {
-//        return creationDate;
-//    }
-//
-//    public void setCreationDate(Date creationDate) {
-//        this.creationDate = creationDate;
-//    }
-//
-//    public String getAdress() {
-//        return adress;
-//    }
-//
-//    public void setAdress(String adress) {
-//        this.adress = adress;
-//    }
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }

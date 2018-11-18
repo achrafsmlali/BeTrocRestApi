@@ -8,12 +8,4 @@ import javax.validation.constraints.NotNull;
 @DiscriminatorValue("DonationRequest")
 public class DonationRequestAd extends Advertisement{
 
-    public DonationRequestAd(@NotNull String email) {
-        super(email);
-    }
-
-    public DonationRequestAd(){
-        super();
-    }
-
 }
