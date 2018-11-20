@@ -15,20 +15,5 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/donationAds")
-public class DonationAdController {
-
-    @Autowired
-    DonationAdRepository donationAdRepository;
-
-    @GetMapping
-    @Secured("ROLE_USER")
-    public List<DonationAd> getAllAdExchange(){
-
-        return donationAdRepository.findAll();
-    }
-    @PostMapping
-    ResponseEntity<?> registerExchangeAd(DonationAd donationAd){
-        donationAdRepository.save(donationAd);
-        return ResponseEntity.accepted().body(new ApiResponse(true,"sucess"));
-    }
+public class DonationAdController extends AdBaseController<DonationAd,DonationAdRepository>{
 }
