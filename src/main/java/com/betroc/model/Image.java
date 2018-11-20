@@ -14,7 +14,7 @@ public class Image {
     private long id;
 
     @NotNull
-    private String url;
+    private String name;
 
     public long getId() {
         return id;
@@ -24,11 +24,13 @@ public class Image {
         this.id = id;
     }
 
-    public String getUrl() {
-        return url;
+
+    public String getName() {
+        return name;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setName(String name) {
+        this.name = name;
     }
+
 }
