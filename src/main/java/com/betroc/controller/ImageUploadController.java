@@ -9,7 +9,6 @@ import com.betroc.service.ImageStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -89,6 +86,8 @@ public class ImageUploadController {
         List<Image> images = new ArrayList();;
         List<String> filesThatNotImages = new ArrayList();
 
+        //check if it's an image then add it upload it to the server and add its Image object to the Images loaded list
+        //else add the file name to the list of nonImageFiles
         for (int i = 0 ;i<files.length;i++){
             try {
                 images.add(uploadImage(files[i]));

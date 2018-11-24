@@ -1,5 +1,6 @@
 package com.betroc.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.NaturalId;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -36,7 +37,7 @@ public class User {
     @Email
     private String email;
 
-
+    @JsonIgnore
     @NotBlank
     @Size(max = 100)
     private String password;

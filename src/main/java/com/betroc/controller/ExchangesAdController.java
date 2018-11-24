@@ -7,5 +7,4 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/exchangeAds")
 public class ExchangesAdController extends AdBaseController<ExchangeAd,ExchangeAdRepository>{
-
 }
