@@ -30,10 +30,10 @@ public abstract class Advertisement {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modificationDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)//Todo remove casacade because remove ad will remove user
     private User  user;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)//Todo remove casacade because remove ad will remove category
     private Category category;
 
     @OneToMany(cascade = CascadeType.ALL,

@@ -88,6 +88,7 @@ public class ImageUploadController {
 
         //check if it's an image then add it upload it to the server and add its Image object to the Images loaded list
         //else add the file name to the list of nonImageFiles
+        //todo if no file in the liste
         for (int i = 0 ;i<files.length;i++){
             try {
                 images.add(uploadImage(files[i]));
