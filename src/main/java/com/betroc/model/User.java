@@ -48,15 +48,17 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    public User() {
+    private boolean enabled;
 
+    public User() {
     }
 
-    public User(String name, String username, String email,  String password) {
+    public User(String name, String username, String email, String password) {
         this.name = name;
         this.username = username;
         this.password = password;
         this.email = email;
+        this.enabled = false;
 
     }
 
@@ -106,5 +108,13 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }
