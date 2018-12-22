@@ -7,9 +7,9 @@ import com.fasterxml.uuid.Generators;
 public class ImageNameGeneratorServiceImpl implements ImageNameGeneratorService{
 
     @Override
-    public String getNewName(){
+    public String getNewName(String originalName){
 
-        return Generators.timeBasedGenerator().generate().toString();
+        return originalName + "_" + Generators.timeBasedGenerator().generate().toString();
 
     }
 }
