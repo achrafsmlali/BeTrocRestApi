@@ -102,7 +102,7 @@ public class AuthController {
         user.setRoles(Collections.singleton(userRole));
 
         User result = userRepository.save(user);//TODO if user not created exp and move it ti after email verification (next line) to catch the expetion if the mail was not sent because of a non valid mail
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(result,urlToThisServlet));
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(result,urlToThisServlet));//TODO if there is a probleme in mail server don't register user
         return ResponseEntity.accepted().body(new ApiResponse(true, "User registered successfully please confirme"));
 
     }

@@ -1,12 +1,12 @@
 package com.betroc.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.betroc.listener.EnityImageListener;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@EntityListeners(EnityImageListener.class)
 public class Image {
 
     @Id

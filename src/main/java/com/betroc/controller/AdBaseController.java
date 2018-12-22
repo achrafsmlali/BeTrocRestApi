@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,7 +24,7 @@ public abstract class AdBaseController <T extends Advertisement,W extends Advert
 
     @GetMapping
     @Secured("ROLE_USER")
-    public List<W> getAllAds(){
+    public List<T> getAllAds(){
 
         return repository.findAll();
     }
@@ -35,7 +36,7 @@ public abstract class AdBaseController <T extends Advertisement,W extends Advert
     }
 
     @PutMapping
-    public ResponseEntity<?> updateExchangeAd(T ad){
+    public ResponseEntity<?> updateAd(T ad){
 
         //check if the Ad with the same id exist if not return a not found
         Optional exchangeAdOptional = repository.findById(ad.getId());
@@ -47,6 +48,19 @@ public abstract class AdBaseController <T extends Advertisement,W extends Advert
         ad.setCreationDate(exchangeAdWithOldData.getCreationDate());
         ad.setModificationDate(new Date());
         repository.save(ad);
+
+        return ResponseEntity.accepted().body(new ApiResponse(true,"success"));
+
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteAd(T ad){
+
+        if(!repository.existsById(ad.getId()))
+            return ResponseEntity.accepted().body(new ApiResponse(false,"failed no such Ad"));
+        //TODO delete only with id not the all ad
+
+        repository.delete(ad);
 
         return ResponseEntity.accepted().body(new ApiResponse(true,"success"));
 

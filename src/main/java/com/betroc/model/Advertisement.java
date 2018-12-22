@@ -1,9 +1,6 @@
 package com.betroc.model;
 
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -22,7 +19,7 @@ public abstract class Advertisement {
 
     @NotNull
     @Column(columnDefinition = "TEXT")
-    private String description; //TODO string is not enouth
+    private String description;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
@@ -30,10 +27,10 @@ public abstract class Advertisement {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modificationDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)//Todo remove casacade because remove ad will remove user
+    @ManyToOne
     private User  user;
 
-    @ManyToOne(cascade = CascadeType.ALL)//Todo remove casacade because remove ad will remove category
+    @ManyToOne
     private Category category;
 
     @OneToMany(cascade = CascadeType.ALL,
@@ -111,4 +108,6 @@ public abstract class Advertisement {
         if (this.creationDate == null) creationDate = new Date();
         if (this.modificationDate == null) modificationDate = new Date();
     }
+
+
 }

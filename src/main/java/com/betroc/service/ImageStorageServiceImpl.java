@@ -11,12 +11,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 
 @Service
 @Transactional
@@ -64,5 +62,22 @@ public class ImageStorageServiceImpl implements ImageStorageService{
         } catch (MalformedURLException ex) {
             throw new MyFileNotFoundException("File not found " + fileName, ex);
         }
+    }
+
+    @Override
+    public void deleteFile(String fileName) {
+
+        Path filePath = this.imageStorageLocation.resolve(fileName).normalize();
+        File file = new File(filePath.toString());
+
+        if(file.delete())
+        {
+            //TODO log
+        }
+        else
+        {
+            //TODO log
+        }
+
     }
 }
