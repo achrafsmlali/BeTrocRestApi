@@ -42,7 +42,7 @@ public class ImageUploadController {
 
         //create new name for the file
         String imageExtension = imageFile.getOriginalFilename().split("\\.")[1];
-        String imageName = imageNameGeneratorService.getNewName()+"."+imageExtension;
+        String imageName = imageNameGeneratorService.getNewName(imageFile.getOriginalFilename())+"."+imageExtension;
 
         //store the image
         imageStorageService.storeFile(imageFile,imageName);

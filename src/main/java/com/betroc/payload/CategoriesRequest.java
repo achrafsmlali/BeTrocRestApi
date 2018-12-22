@@ -1,36 +1,25 @@
-package com.betroc.model;
+package com.betroc.payload;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import com.betroc.model.SubCategory;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
-@Entity
-public class Category {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class CategoriesRequest {
 
-    @NotNull
+
+
+    @NotBlank
     private String title;
 
-    @NotNull
-    @Column(columnDefinition = "TEXT")
+    @NotBlank
     private String description;
 
 
-    @NotNull
-    @OneToMany(cascade = CascadeType.ALL)
+
     private List<SubCategory> subCategories;
 
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getTitle() {
         return title;
@@ -55,6 +44,5 @@ public class Category {
     public void setSubCategories(List<SubCategory> subCategories) {
         this.subCategories = subCategories;
     }
-
 
 }
