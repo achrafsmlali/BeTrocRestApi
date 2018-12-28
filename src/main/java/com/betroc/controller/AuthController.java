@@ -6,16 +6,12 @@ import com.betroc.model.Role;
 import com.betroc.model.RoleName;
 import com.betroc.model.User;
 import com.betroc.model.VerificationToken;
-import com.betroc.payload.ApiResponse;
-import com.betroc.payload.JwtAuthenticationResponse;
-import com.betroc.payload.LoginRequest;
-import com.betroc.payload.SignUpRequest;
+import com.betroc.payload.*;
 import com.betroc.repository.RoleRepository;
 import com.betroc.repository.UserRepository;
 import com.betroc.repository.VerificationTokenRepository;
 import com.betroc.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +54,7 @@ public class AuthController {
 
 
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public LoginResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         //TODO if username or email does not exist then return not resgistred
         Authentication authentication = authenticationManager.authenticate(
@@ -71,7 +67,10 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String jwt = tokenProvider.generateToken(authentication);
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+
+        long idUser = this.userRepository.findByUsernameOrEmail(loginRequest.getUsernameOrEmail(),
+                                                                loginRequest.getUsernameOrEmail()).get().getId();
+        return new LoginResponse(idUser,jwt );
     }
 
     @PostMapping("/signup")
