@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
@@ -23,14 +20,14 @@ public abstract class AdBaseController <T extends Advertisement,W extends Advert
     private W repository;
 
     @GetMapping
-    @Secured("ROLE_USER")
+    //@Secured("ROLE_USER")
     public List<T> getAllAds(){
 
         return repository.findAll();
     }
 
     @PostMapping
-    public ResponseEntity<?> registerAd(T ad){
+    public ResponseEntity<?> registerAd(@RequestBody T ad){
         repository.save(ad);
          return ResponseEntity.accepted().body(new ApiResponse(true,"sucess"));
     }
