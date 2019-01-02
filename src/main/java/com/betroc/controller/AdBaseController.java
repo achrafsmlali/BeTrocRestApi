@@ -4,13 +4,14 @@ import com.betroc.model.Advertisement;
 import com.betroc.payload.ApiResponse;
 import com.betroc.repository.AdvertisementBaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -21,9 +22,9 @@ public abstract class AdBaseController <T extends Advertisement,W extends Advert
 
     @GetMapping
     //@Secured("ROLE_USER")
-    public List<T> getAllAds(){
+    public Page getAllAds(@PageableDefault(size = 10, sort = "id") Pageable pageable){
 
-        return repository.findAll();
+        return repository.findAll(pageable);
     }
 
     @PostMapping
