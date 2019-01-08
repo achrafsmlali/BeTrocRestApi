@@ -1,8 +1,15 @@
 package com.betroc.controller;
 
+import com.betroc.model.DonationAd;
+import com.betroc.model.DonationRequestAd;
+import com.betroc.model.ExchangeAd;
 import com.betroc.model.User;
 import com.betroc.payload.ApiResponse;
 import com.betroc.payload.PasswordUpdateRequest;
+import com.betroc.payload.ProfileResponse;
+import com.betroc.repository.DonationAdRepository;
+import com.betroc.repository.DonationRequestAdRepository;
+import com.betroc.repository.ExchangeAdRepository;
 import com.betroc.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -22,9 +30,34 @@ public class UserController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    DonationAdRepository donationAdRepository;
+    @Autowired
+    ExchangeAdRepository exchangeAdRepository;
+    @Autowired
+    DonationRequestAdRepository donationRequestAdRepository;
+
     @GetMapping("/{id}")
-    Optional<User> getUser(@PathVariable("id") long id){
-        return userRepository.findById(id);
+    ProfileResponse getUser(@PathVariable("id") long id){
+
+        ProfileResponse profileResponse = new ProfileResponse();
+
+        String username = userRepository.findById(id).get().getUsername();
+        String email = userRepository.findById(id).get().getEmail();
+        List<DonationAd> donationAdsList = this.donationAdRepository.findAllByUser(userRepository.findById(id));
+        List<ExchangeAd> exchangeAList = this.exchangeAdRepository.findAllByUser(userRepository.findById(id));
+        List<DonationRequestAd> donationRequestAdList = this.donationRequestAdRepository.findAllByUser
+                                                                                            (userRepository.findById(id));
+        System.out.println(donationRequestAdRepository.getAllIdsByUser(userRepository.findById(id)).size());
+        int nb_annonce = donationAdsList.size() + exchangeAList.size() + donationRequestAdList.size();
+
+        profileResponse.setUsername(username);
+        profileResponse.setEmail(email);
+        profileResponse.setDonationAds(donationAdsList);
+        profileResponse.setDonationRequestAds(donationRequestAdList);
+        profileResponse.setExchangeAds(exchangeAList);
+        profileResponse.setNb_annonce(nb_annonce);
+        return profileResponse;
     }
 
 
