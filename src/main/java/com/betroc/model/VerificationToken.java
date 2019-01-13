@@ -1,6 +1,9 @@
 package com.betroc.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,17 +17,33 @@ public class VerificationToken {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
 
+    @NotNull
     private String token;
 
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
+    @NotNull
     private User user;
 
+    @Temporal(TemporalType.TIMESTAMP)
     private Date expiryDate;
+
+    //this failed user only when email modification
+    @Size(max = 40)
+    @Email
+    private String newEmail;
 
     public VerificationToken(String token, User user) {
         this.token = token;
         this.user = user;
+        this.expiryDate = this.calculateExpiryDate(EXPIRATION);
+        this.newEmail = "";
+    }
+
+    public VerificationToken( String token, User user, String newEmail) {
+        this.token = token;
+        this.user = user;
+        this.newEmail = newEmail;
         this.expiryDate = this.calculateExpiryDate(EXPIRATION);
     }
 
@@ -67,5 +86,13 @@ public class VerificationToken {
 
     public void setExpiryDate(Date expiryDate) {
         this.expiryDate = expiryDate;
+    }
+
+    public String getNewEmail() {
+        return newEmail;
+    }
+
+    public void setNewEmail(String newEmail) {
+        this.newEmail = newEmail;
     }
 }

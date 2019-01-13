@@ -106,8 +106,8 @@ public class AuthController {
 
     }
 
-    @GetMapping("/registrationConfirm")
-    public String confirmRegistration( @RequestParam("token") String token){
+    @GetMapping("/confirmRegistrationOrEmailUpdate")
+    public String confirmRegistrationOrEmailUpdate( @RequestParam("token") String token){
         VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
         if (verificationToken == null)
             return "BadUser invalidToken";
@@ -118,9 +118,19 @@ public class AuthController {
         if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0)
             return "BadUser Token expired";
 
-        user.setEnabled(true);
-        userRepository.save(user);
+        if (!verificationToken.getNewEmail().equals("")){//then it's a request for confirming an email update
 
-        return "user verified";
+            user.setEmail(verificationToken.getNewEmail());
+            userRepository.save(user);
+            return "user email updated successfully";
+
+        }else{//it's a request for confirming an email for a new account
+
+            user.setEnabled(true);
+            userRepository.save(user);
+            return "user verified";
+
+        }
+
     }
 }

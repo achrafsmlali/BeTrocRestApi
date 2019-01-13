@@ -39,7 +39,7 @@ public class CategoriesServiceImpl implements CategoriesService {
                 String uriDownloadImage = " ";
                 try{
 
-                    uriDownloadImage = this.urlServer + "/downloadImage/" + this.imageRepository
+                    uriDownloadImage = this.urlServer + "/api/downloadImage/" + this.imageRepository
                                                                             .findByNameStartingWith(this.subCategoryRepository
                                                                             .findByImgNameStartingWith(categories.get(i)
                                                                                     .getSubCategories()

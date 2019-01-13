@@ -29,15 +29,27 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         User user = event.getUser();
         String token = UUID.randomUUID().toString();
 
-        VerificationToken verificationToken = new VerificationToken(token, user);
+        //if is't about updating an email of an existing account
+        String newEmail = event.getNewEmail();
+
+        VerificationToken verificationToken;
+        String recipientAddress;
+        String subject;
+
+        if (newEmail.equals("")) { //creating a token for email verification for a new user
+            verificationToken = new VerificationToken(token, user);
+            recipientAddress = user.getEmail();
+            subject = "Registration Confirmation";
+        }else { //creating a token for email update of an existing user
+            verificationToken = new VerificationToken(token, user, newEmail);
+            recipientAddress = newEmail;
+            subject = "New mail Confirmation";
+        }
+
         verificationTokenRepository.save(verificationToken);
 
-        String recipientAddress = user.getEmail();
-
-        String subject = "Registration Confirmation";
-
         String confirmationUrl
-                = event.getAppUrl()+"/registrationConfirm?token=" + token;
+                = event.getAppUrl()+"/confirmRegistrationOrEmailUpdate?token=" + token;
 
         mailerService.sendSimpleMessage(recipientAddress,subject, confirmationUrl);
 

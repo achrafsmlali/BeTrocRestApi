@@ -1,22 +1,31 @@
 package com.betroc.controller;
 
+import com.betroc.event.OnRegistrationCompleteEvent;
 import com.betroc.model.DonationAd;
 import com.betroc.model.DonationRequestAd;
 import com.betroc.model.ExchangeAd;
 import com.betroc.model.User;
 import com.betroc.payload.ApiResponse;
+import com.betroc.payload.EmailUpdateRequest;
 import com.betroc.payload.PasswordUpdateRequest;
 import com.betroc.payload.ProfileResponse;
 import com.betroc.repository.DonationAdRepository;
 import com.betroc.repository.DonationRequestAdRepository;
 import com.betroc.repository.ExchangeAdRepository;
 import com.betroc.repository.UserRepository;
+import com.betroc.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +46,12 @@ public class UserController {
     @Autowired
     DonationRequestAdRepository donationRequestAdRepository;
 
+    @Autowired
+    ApplicationEventPublisher eventPublisher;
+
+    @Value("${SERVER.URL}")
+    String serverUrl;
+
     @GetMapping("/{id}")
     ProfileResponse getUser(@PathVariable("id") long id){
 
@@ -48,7 +63,6 @@ public class UserController {
         List<ExchangeAd> exchangeAList = this.exchangeAdRepository.findAllByUser(userRepository.findById(id));
         List<DonationRequestAd> donationRequestAdList = this.donationRequestAdRepository.findAllByUser
                                                                                             (userRepository.findById(id));
-        System.out.println(donationRequestAdRepository.getAllIdsByUser(userRepository.findById(id)).size());
         int nb_annonce = donationAdsList.size() + exchangeAList.size() + donationRequestAdList.size();
 
         profileResponse.setUsername(username);
@@ -81,6 +95,43 @@ public class UserController {
         else{
             return new ResponseEntity(new ApiResponse(false, "the user doesnot exist"), HttpStatus.BAD_REQUEST);
         }
+
+    }
+
+    @PostMapping("/email/update")
+    public ResponseEntity updateEmail(@RequestBody EmailUpdateRequest emailUpdateRequest,HttpServletRequest request){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
+
+        Optional<User> userOp = userRepository.findById(emailUpdateRequest.getUserId());
+
+        //the new email already exist
+        if (userRepository.existsByEmail(emailUpdateRequest.getNewEmail()))
+            return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
+                    HttpStatus.BAD_REQUEST);
+
+        if (userOp.isPresent()){
+            User user = userOp.get();
+
+            String newEmail = emailUpdateRequest.getNewEmail();
+
+            //the url to auth controller
+            String urlToAuthServlet = this.serverUrl+AuthController.class.getAnnotation(RequestMapping.class).value()[0];
+
+            //send an email to user new email
+            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user,urlToAuthServlet,newEmail));//TODO if there is a probleme in mail server don't register user
+
+//            //Logout the user
+//            if (auth != null){
+//                //SecurityContextLogoutHandler performs a logout by modifying the SecurityContextHolder.
+//                System.out.println("shoud log out");
+//                new SecurityContextLogoutHandler().logout(request,null,auth);
+//            }
+            return new ResponseEntity(new ApiResponse(true, "you need to comfirm your new email"), HttpStatus.OK);
+        }
+
+        return new ResponseEntity(new ApiResponse(false, "no such user"), HttpStatus.BAD_REQUEST);
 
     }
 }
