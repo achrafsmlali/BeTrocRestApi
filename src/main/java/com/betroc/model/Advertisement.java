@@ -1,6 +1,8 @@
 package com.betroc.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -28,6 +30,7 @@ public abstract class Advertisement {
     private Date modificationDate;
 
     @ManyToOne
+    @JsonIgnore
     private User  user;
 
     @ManyToOne
