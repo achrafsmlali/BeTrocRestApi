@@ -48,7 +48,6 @@ public class UserController {
         List<ExchangeAd> exchangeAList = this.exchangeAdRepository.findAllByUser(userRepository.findById(id));
         List<DonationRequestAd> donationRequestAdList = this.donationRequestAdRepository.findAllByUser
                                                                                             (userRepository.findById(id));
-        System.out.println(donationRequestAdRepository.getAllIdsByUser(userRepository.findById(id)).size());
         int nb_annonce = donationAdsList.size() + exchangeAList.size() + donationRequestAdList.size();
 
         profileResponse.setUsername(username);

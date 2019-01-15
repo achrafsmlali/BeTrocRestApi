@@ -28,7 +28,7 @@ public abstract class AdBaseController <T extends Advertisement,W extends Advert
     }
 
     @PostMapping
-    public ResponseEntity<?> registerAd(@RequestBody T ad){
+    public ResponseEntity<?> registerAd(T ad){
         repository.save(ad);
          return ResponseEntity.accepted().body(new ApiResponse(true,"sucess"));
     }
@@ -51,14 +51,14 @@ public abstract class AdBaseController <T extends Advertisement,W extends Advert
 
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> deleteAd(T ad){
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteAd(@PathVariable("id") Long id){
 
-        if(!repository.existsById(ad.getId()))
+        if(!repository.existsById(id))
             return ResponseEntity.accepted().body(new ApiResponse(false,"failed no such Ad"));
         //TODO delete only with id not the all ad
 
-        repository.delete(ad);
+        repository.deleteById(id);
 
         return ResponseEntity.accepted().body(new ApiResponse(true,"success"));
 
