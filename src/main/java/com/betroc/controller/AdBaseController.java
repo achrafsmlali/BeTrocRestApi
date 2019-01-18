@@ -24,7 +24,7 @@ import java.util.Optional;
 public abstract class AdBaseController <T extends Advertisement,W extends AdvertisementBaseRepository>{
 
     @Autowired
-    private W repository;
+    protected W repository;
 
     @Autowired
     private UserRepository userRepository;

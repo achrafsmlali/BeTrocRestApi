@@ -15,6 +15,10 @@ public class ExchangeAd extends Advertisement{
     @Column(columnDefinition = "TEXT")
     private String address;
 
+    private double latitude;
+
+    private double longitude;
+
     public State getState() {
         return state;
     }
