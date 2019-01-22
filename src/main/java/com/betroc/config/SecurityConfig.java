@@ -82,6 +82,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // WSCA provi
                 .permitAll()
                 .antMatchers("/api/auth/**")// /api/auth/** is accessible without auth
                 .permitAll()
+                .antMatchers("/swagger-resources/**","/v2/api-docs")
+                .permitAll()
                 .antMatchers(HttpMethod.GET,"/api/donationAds","/api/DonationRequestAd","/api/exchangeAds")
                 .permitAll()
                 .anyRequest()
