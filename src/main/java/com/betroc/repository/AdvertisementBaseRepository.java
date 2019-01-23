@@ -12,4 +12,7 @@ import java.util.List;
 @NoRepositoryBean
 public interface AdvertisementBaseRepository <T extends Advertisement> extends JpaRepository<T ,Long> {
     Page<T> findAll(Pageable pageable);
+
+    Page<T> findAllByCategory_Title(Pageable pageable, String title);
+
 }
