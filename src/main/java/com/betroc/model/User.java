@@ -1,10 +1,13 @@
-package com.betroc.user;
+package com.betroc.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.NaturalId;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "user", uniqueConstraints = {
@@ -28,27 +31,34 @@ public class User {
     @Size(max = 15)
     private String username;
 
-    @NaturalId
+    @Column(unique = true)
     @NotBlank
     @Size(max = 40)
     @Email
     private String email;
 
-
+    @JsonIgnore
     @NotBlank
     @Size(max = 100)
     private String password;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
+
+    private boolean enabled;
 
     public User() {
-
     }
 
-    public User(String name, String username, String email,  String password) {
+    public User(String name, String username, String email, String password) {
         this.name = name;
         this.username = username;
         this.password = password;
         this.email = email;
+        this.enabled = false;
 
     }
 
@@ -90,5 +100,21 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }
