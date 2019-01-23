@@ -30,7 +30,6 @@ public abstract class Advertisement {
     private Date modificationDate;
 
     @ManyToOne
-    @JsonIgnore
     private User  user;
 
     @ManyToOne
