@@ -92,7 +92,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // WSCA provi
                         "/api/donationAds/closet/lat/{lat}/long/{lng}",
                         "/api/donationAds/search",
                         "/api/exchangeAds/search",
-                        "/api/DonationRequestAd/search")
+                        "/api/DonationRequestAd/search",
+                        "/api/exchangeAds/{id}",
+                        "/api/DonationRequestAd/{id}",
+                        "/api/donationAds/{id}"
+                        )
                 .permitAll()
                 .antMatchers("/swagger-resources/**","/v2/api-docs")
                 .permitAll()

@@ -29,6 +29,17 @@ public abstract class AdBaseController <T extends Advertisement,W extends Advert
     @Autowired
     private UserRepository userRepository;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getAd(@PathVariable("id") long id ){
+
+        Optional<T> a = repository.findById(id);
+
+        if (a.isPresent())
+            return ResponseEntity.accepted().body(a);
+        else
+            return ResponseEntity.notFound().build();
+    }
+
     @GetMapping
     //@Secured("ROLE_USER")
     public Page getAllAds(@PageableDefault(size = 10, sort = "id") Pageable pageable){
