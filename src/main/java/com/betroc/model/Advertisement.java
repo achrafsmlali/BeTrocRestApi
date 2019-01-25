@@ -33,13 +33,12 @@ public abstract class Advertisement {
     private User  user;
 
     @ManyToOne
-    private Category category;
+    private SubCategory category;
 
     @OneToMany(cascade = CascadeType.ALL,
     orphanRemoval = true
     )
     private List<Image> images;
-
 
     public long getId() {
         return id;
@@ -89,11 +88,11 @@ public abstract class Advertisement {
         this.user = user;
     }
 
-    public Category getCategory() {
+    public SubCategory getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(SubCategory category) {
         this.category = category;
     }
 
