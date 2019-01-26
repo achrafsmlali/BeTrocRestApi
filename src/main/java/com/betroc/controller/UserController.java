@@ -78,6 +78,15 @@ public class UserController {
     @PostMapping("/password/update")
     public ResponseEntity updatePassWord(@RequestBody PasswordUpdateRequest passwordUpdateRequest){
 
+        //get Authenticated user info
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
+
+        //check if the account for which the password will be updated is for the Authenticated one
+        if (userPrincipal.getId() != passwordUpdateRequest.getUserId())
+            return new ResponseEntity(new ApiResponse(false, "you are not authorized"),
+                    HttpStatus.BAD_REQUEST);
+
         Optional<User> userOp = userRepository.findById(passwordUpdateRequest.getUserId());
         if(userOp.isPresent()) {
             User user = userOp.get();
@@ -101,14 +110,20 @@ public class UserController {
     @PostMapping("/email/update")
     public ResponseEntity updateEmail(@RequestBody EmailUpdateRequest emailUpdateRequest,HttpServletRequest request){
 
+        //get Authenticated user info
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
+
+        //check if the account for which the email will be updated is for the Authenticated one
+        if (userPrincipal.getId() != emailUpdateRequest.getUserId())
+            return new ResponseEntity(new ApiResponse(false, "you are not authorized"),
+                    HttpStatus.BAD_REQUEST);
 
         Optional<User> userOp = userRepository.findById(emailUpdateRequest.getUserId());
 
         //the new email already exist
         if (userRepository.existsByEmail(emailUpdateRequest.getNewEmail()))
-            return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
+            return new ResponseEntity(new ApiResponse(false, "email is already taken!"),
                     HttpStatus.BAD_REQUEST);
 
         if (userOp.isPresent()){
@@ -122,16 +137,11 @@ public class UserController {
             //send an email to user new email
             eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user,urlToAuthServlet,newEmail));//TODO if there is a probleme in mail server don't register user
 
-//            //Logout the user
-//            if (auth != null){
-//                //SecurityContextLogoutHandler performs a logout by modifying the SecurityContextHolder.
-//                System.out.println("shoud log out");
-//                new SecurityContextLogoutHandler().logout(request,null,auth);
-//            }
             return new ResponseEntity(new ApiResponse(true, "you need to comfirm your new email"), HttpStatus.OK);
         }
 
         return new ResponseEntity(new ApiResponse(false, "no such user"), HttpStatus.BAD_REQUEST);
 
     }
+
 }
