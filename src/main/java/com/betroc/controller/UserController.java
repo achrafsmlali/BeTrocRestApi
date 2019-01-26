@@ -26,6 +26,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.Optional;
 
@@ -143,5 +144,33 @@ public class UserController {
         return new ResponseEntity(new ApiResponse(false, "no such user"), HttpStatus.BAD_REQUEST);
 
     }
+
+    @PostMapping("/username/update/{newUsername}")
+    public ResponseEntity updateUsername(@PathVariable String newUsername){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
+
+        Optional<User> userOp = userRepository.findById(userPrincipal.getId());
+
+
+        if (userRepository.existsByUsername(newUsername)){
+            return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
+                    HttpStatus.BAD_REQUEST);
+        }else {
+
+            if (userOp.isPresent()){
+                User user = userOp.get();
+                user.setUsername(newUsername);
+                userRepository.save(user);
+
+                return new ResponseEntity(new ApiResponse(true, "username updated successfully"), HttpStatus.OK);
+            }else
+                return new ResponseEntity(new ApiResponse(false, "no such user"), HttpStatus.BAD_REQUEST);
+
+        }
+
+    }
+
 
 }
