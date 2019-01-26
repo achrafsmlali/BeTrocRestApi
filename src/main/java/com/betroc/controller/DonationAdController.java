@@ -12,8 +12,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 
 @RestController
 @RequestMapping("/api/donationAds")
@@ -34,7 +32,7 @@ public class DonationAdController extends AdBaseController<DonationAd,DonationAd
         DonationAd adFilter = new DonationAd();
 
         if (category != null)
-            adFilter.setCategory(subCategoryRepository.findAllById(category));
+            adFilter.setSubCategory(subCategoryRepository.findAllById(category));
 
         adFilter.setState(state);
         adFilter.setTitle(key);

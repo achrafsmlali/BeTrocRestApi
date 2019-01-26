@@ -12,8 +12,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/exchangeAds")
 public class ExchangesAdController extends AdBaseController<ExchangeAd,ExchangeAdRepository>{
@@ -33,7 +31,7 @@ public class ExchangesAdController extends AdBaseController<ExchangeAd,ExchangeA
         ExchangeAd adFilter = new ExchangeAd();
 
         if (category != null)
-            adFilter.setCategory(subCategoryRepository.findAllById(category));
+            adFilter.setSubCategory(subCategoryRepository.findAllById(category));
 
         adFilter.setState(state);
         adFilter.setTitle(key);

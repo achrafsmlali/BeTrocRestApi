@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 
 @RestController
 @RequestMapping("/api/DonationRequestAd")
@@ -30,7 +28,7 @@ public class DonationRequestAdController extends AdBaseController<DonationReques
         DonationRequestAd adFilter = new DonationRequestAd();
 
         if (category != null)
-            adFilter.setCategory(subCategoryRepository.findAllById(category));
+            adFilter.setSubCategory(subCategoryRepository.findAllById(category));
 
         adFilter.setTitle(key);
 
