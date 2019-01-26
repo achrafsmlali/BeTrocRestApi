@@ -1,8 +1,6 @@
 package com.betroc.model;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -33,13 +31,15 @@ public abstract class Advertisement {
     private User  user;
 
     @ManyToOne
+    private SubCategory subCategory;
+
+    @ManyToOne
     private Category category;
 
     @OneToMany(cascade = CascadeType.ALL,
     orphanRemoval = true
     )
     private List<Image> images;
-
 
     public long getId() {
         return id;
@@ -87,6 +87,14 @@ public abstract class Advertisement {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public SubCategory getSubCategory() {
+        return subCategory;
+    }
+
+    public void setSubCategory(SubCategory subCategory) {
+        this.subCategory = subCategory;
     }
 
     public Category getCategory() {
