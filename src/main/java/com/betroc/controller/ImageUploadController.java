@@ -58,8 +58,10 @@ public class ImageUploadController {
 
     @GetMapping("/downloadImage/{fileName:.+}")
     public ResponseEntity<Resource> downloadImage(@PathVariable String fileName, HttpServletRequest request) {
+        //Get full name of image from database (we need this to display subCategory images)
+        String imageNameFromDataBase = this.imageRepository.findByNameStartingWith(fileName).getName();
         // Load file as Resource
-        Resource resource = imageStorageService.loadFileAsResource(fileName);
+        Resource resource = imageStorageService.loadFileAsResource(imageNameFromDataBase);
 
         // Try to determine file's content type
         String contentType = null;

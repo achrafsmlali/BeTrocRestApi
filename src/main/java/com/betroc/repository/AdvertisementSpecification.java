@@ -42,8 +42,8 @@ public class AdvertisementSpecification <T extends Advertisement>  implements Sp
 
         }
 
-        if (adFilter.getCategory() != null){
-            predicates.add(cb.equal(root.get("category"),adFilter.getCategory()));
+        if (adFilter.getSubCategory() != null){
+            predicates.add(cb.equal(root.get("subCategory"),adFilter.getSubCategory()));
         }
 
         if(adFilter.getTitle() != null ){
