@@ -9,10 +9,7 @@ import com.betroc.payload.ApiResponse;
 import com.betroc.payload.EmailUpdateRequest;
 import com.betroc.payload.PasswordUpdateRequest;
 import com.betroc.payload.ProfileResponse;
-import com.betroc.repository.DonationAdRepository;
-import com.betroc.repository.DonationRequestAdRepository;
-import com.betroc.repository.ExchangeAdRepository;
-import com.betroc.repository.UserRepository;
+import com.betroc.repository.*;
 import com.betroc.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,6 +49,9 @@ public class UserController {
 
     @Value("${SERVER.URL}")
     String serverUrl;
+
+    @Autowired
+    ImageRepository imageRepository;
 
     @GetMapping("/{id}")
     ProfileResponse getUser(@PathVariable("id") long id){
@@ -169,6 +169,30 @@ public class UserController {
                 return new ResponseEntity(new ApiResponse(false, "no such user"), HttpStatus.BAD_REQUEST);
 
         }
+
+    }
+
+    @PostMapping("/profileimage/update/{imageId}")
+    public ResponseEntity updateProfileImage(@PathVariable long imageId){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
+
+        Optional<User> userOp = userRepository.findById(userPrincipal.getId());
+
+        if(!imageRepository.existsById(imageId))
+            return new ResponseEntity(new ApiResponse(false, "Image with id = "+imageId+" does not exist "),
+                    HttpStatus.BAD_REQUEST);
+
+        if (userOp.isPresent()){
+            User user = userOp.get();
+
+            user.setProfileImage(imageRepository.findById(imageId).get());
+            userRepository.save(user);
+            return new ResponseEntity(new ApiResponse(true, "profile Image updated successfully"), HttpStatus.OK);
+        }else
+            return new ResponseEntity(new ApiResponse(false, "no such user"), HttpStatus.BAD_REQUEST);
+
 
     }
 
