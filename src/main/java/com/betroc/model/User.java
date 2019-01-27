@@ -50,7 +50,9 @@ public class User {
 
     private boolean enabled;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private Image profileImage;
 
     public User() {

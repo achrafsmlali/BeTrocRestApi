@@ -23,6 +23,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.Optional;
@@ -52,6 +53,12 @@ public class UserController {
 
     @Autowired
     ImageRepository imageRepository;
+
+    @Autowired
+    AdvertisementRepository advertisementRepository;
+
+    @Autowired
+    VerificationTokenRepository verificationTokenRepository;
 
     @GetMapping("/{id}")
     ProfileResponse getUser(@PathVariable("id") long id){
@@ -196,5 +203,37 @@ public class UserController {
 
     }
 
+    @DeleteMapping
+    @Transactional
+    public ResponseEntity deleteAccount(@RequestParam String password){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
+
+        Optional<User> userOp = userRepository.findById(userPrincipal.getId());
+
+
+
+        if (userOp.isPresent()){
+            User user = userOp.get();
+
+            //check if the password matches the one in the database
+            boolean passwordMatches = passwordEncoder.matches(password,user.getPassword());
+
+
+            if (passwordMatches){//delete account and his Ads
+                advertisementRepository.deleteByUser_Id(user.getId());
+                verificationTokenRepository.deleteByUser_Id(user.getId());
+                userRepository.delete(user);
+                return new ResponseEntity(new ApiResponse(true, "account deleted successfully"), HttpStatus.OK);
+            }else{
+                return new ResponseEntity(new ApiResponse(false, "the entred password isn't correct"), HttpStatus.BAD_REQUEST);
+            }
+
+        }else{
+            return new ResponseEntity(new ApiResponse(false, "no such user"), HttpStatus.BAD_REQUEST);
+        }
+
+    }
 
 }
