@@ -3,6 +3,7 @@ package com.betroc.payload;
 import com.betroc.model.DonationAd;
 import com.betroc.model.DonationRequestAd;
 import com.betroc.model.ExchangeAd;
+import com.betroc.model.Image;
 
 import java.util.List;
 
@@ -19,6 +20,8 @@ public class ProfileResponse {
     private List<DonationRequestAd> donationRequestAds;
 
     private int nb_annonce;
+
+    private Image profileImage;
 
     public String getUsername() {
         return username;
@@ -67,4 +70,13 @@ public class ProfileResponse {
     public void setNb_annonce(int nb_annonce) {
         this.nb_annonce = nb_annonce;
     }
+
+    public Image getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(Image profileImage) {
+        this.profileImage = profileImage;
+    }
+
 }

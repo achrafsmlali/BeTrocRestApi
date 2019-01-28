@@ -50,6 +50,11 @@ public class User {
 
     private boolean enabled;
 
+    @OneToOne(cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private Image profileImage;
+
     public User() {
     }
 
@@ -116,5 +121,13 @@ public class User {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public Image getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(Image profileImage) {
+        this.profileImage = profileImage;
     }
 }
