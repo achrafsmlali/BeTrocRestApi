@@ -20,7 +20,6 @@ public class MailerServiceImpl implements MailerService {
         message.setText(text);
         emailSender.send(message);
 
-        emailSender.send(message);
 
     }
 }
