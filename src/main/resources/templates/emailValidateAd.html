@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Sending Email with Freemarker HTML Template Example</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <!-- use the font -->
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 48px;
+        }
+    </style>
+</head>
+<body style="margin: 0; padding: 0;">
+
+<table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse;">
+    <tr>
+        <td align="center" bgcolor="#F44C45" style="padding: 40px 0 30px 0;">
+            <p style="color: white; font-weight: bold" ><b style="color: white; font-weight: bold" >New ad in your data base</b> ${Title}</p>
+        </td>
+    </tr>
+    <tr>
+        <td bgcolor="#eaeaea" style="padding: 40px 30px 40px 30px;">
+            <p><b>Title</b> ${Title}</p>
+            <p><b>Description</b> ${Description}</p>
+            <p><b>Categorie</b> ${categorie}</p>
+            <p><b>Uri of request</b> ${uriOfRequest}</p>
+        </td>
+    </tr>
+    <tr>
+        <td bgcolor="#F44C45" style="padding: 30px 30px 30px 30px;">
+            <form action="${serverURL}${uriOfRequest}/validate/${idAnnonce}/true">
+                <input type="submit" value="Valide this ad" />
+            </form>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
