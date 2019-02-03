@@ -53,7 +53,8 @@ public class AdvertisementSpecification <T extends Advertisement>  implements Sp
             ));
         }
 
-
+        predicates.add(cb.isTrue(root.get("validated")));
+        
         predicate.getExpressions().add(cb.and(predicates.toArray(new Predicate[0])));
 
         return predicate;

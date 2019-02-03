@@ -14,11 +14,11 @@ import java.util.List;
 
 @NoRepositoryBean
 public interface AdvertisementBaseRepository <T extends Advertisement> extends JpaRepository<T ,Long> , JpaSpecificationExecutor<T> {
-    Page<T> findAll(Pageable pageable);
 
-    Page<T> findAllByCategory_Title(Pageable pageable, String title);
+    Page<T> findAllByValidated(Pageable pageable, boolean validated);
 
-    Page<T> findAll(@Nullable Specification<T> var1,Pageable pageable);
+    Page<T> findAllByCategory_TitleAndValidated(Pageable pageable, String title, boolean validated);
 
+    Page<T> findAll(@Nullable Specification<T> var1, Pageable pageable);
 
 }
