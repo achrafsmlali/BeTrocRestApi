@@ -84,7 +84,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // WSCA provi
                 .permitAll()
                 .antMatchers(HttpMethod.GET,
 			"/api/downloadImage/**",
-			"/api/donationAds",
+                        "/api/donationAds",
                         "/api/DonationRequestAd",
                         "/api/exchangeAds",
                         "/api/donationAds/category/**",
@@ -97,7 +97,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // WSCA provi
                         "/api/DonationRequestAd/search",
                         "/api/exchangeAds/{id}",
                         "/api/DonationRequestAd/{id}",
-                        "/api/donationAds/{id}"
+                        "/api/donationAds/{id}",
+                        "/api/exchangeAds/validate/{id}/{validated}",
+                        "/api/DonationRequestAd/validate/{id}/{validated}",
+                        "/api/donationAds/validate/{id}/{validated}"
                         )
                 .permitAll()
                 .antMatchers("/swagger-resources/**","/v2/api-docs")

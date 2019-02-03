@@ -65,10 +65,10 @@ public class UserController {
         String username = userRepository.findById(id).get().getUsername();
         String email = userRepository.findById(id).get().getEmail();
         Image profileImage = userRepository.findById(id).get().getProfileImage();
-        List<DonationAd> donationAdsList = this.donationAdRepository.findAllByUser(userRepository.findById(id));
-        List<ExchangeAd> exchangeAList = this.exchangeAdRepository.findAllByUser(userRepository.findById(id));
-        List<DonationRequestAd> donationRequestAdList = this.donationRequestAdRepository.findAllByUser
-                                                                                            (userRepository.findById(id));
+        List<DonationAd> donationAdsList = this.donationAdRepository.findAllByUserAndValidated(userRepository.findById(id), true);
+        List<ExchangeAd> exchangeAList = this.exchangeAdRepository.findAllByUserAndValidated(userRepository.findById(id), true);
+        List<DonationRequestAd> donationRequestAdList = this.donationRequestAdRepository.findAllByUserAndValidated
+                                                                                            (userRepository.findById(id), true);
         int nb_annonce = donationAdsList.size() + exchangeAList.size() + donationRequestAdList.size();
 
         profileResponse.setUsername(username);

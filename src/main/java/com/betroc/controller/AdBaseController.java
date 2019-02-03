@@ -1,12 +1,16 @@
 package com.betroc.controller;
 
 import com.betroc.model.Advertisement;
+import com.betroc.model.Image;
 import com.betroc.model.User;
 import com.betroc.payload.ApiResponse;
 import com.betroc.repository.AdvertisementBaseRepository;
 import com.betroc.repository.UserRepository;
 import com.betroc.security.UserPrincipal;
+import com.betroc.service.MailerService;
+import freemarker.template.TemplateException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -17,7 +21,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -28,6 +37,15 @@ public abstract class AdBaseController <T extends Advertisement,W extends Advert
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private MailerService mailerService;
+
+    @Value("${spring.mail.username}")
+    private String recipientAddress;
+
+    @Value("${SERVER_URL}")
+    private String SERVER_URL;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getAd(@PathVariable("id") long id ){
@@ -44,18 +62,40 @@ public abstract class AdBaseController <T extends Advertisement,W extends Advert
     //@Secured("ROLE_USER")
     public Page getAllAds(@PageableDefault(size = 10, sort = "id") Pageable pageable){
 
-        return repository.findAll(pageable);
+        //get all validated ads
+        return repository.findAllByValidated(pageable, true);
+    }
+
+
+    @GetMapping("/validate/{id}/{validated}")
+    public ResponseEntity validateAd(@PathVariable("id") long id, @PathVariable("validated") boolean validated){
+        Optional<Advertisement> adOp = repository.findById(id);
+
+        if(adOp.isPresent()){
+            Advertisement ad = adOp.get();
+            if(validated) {
+                ad.setValidated(true);
+                repository.save(ad);
+                return new ResponseEntity(new ApiResponse(true, "ad validate successfully"), HttpStatus.OK);
+            }else if(!validated){
+                repository.delete(ad);
+                return new ResponseEntity(new ApiResponse(true, "ad delete by the admin"), HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity(new ApiResponse(true, "no ad was found"), HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/category/{category}")
     //@Secured("ROLE_USER")
     public Page getAllByCategory(@PathVariable("category") String category, @PageableDefault(size = 10, sort = "id") Pageable pageable){
 
-        return repository.findAllByCategory_Title(pageable, category);
+        return repository.findAllByCategory_TitleAndValidated(pageable, category, true);
     }
 
     @PostMapping
-    public ResponseEntity<?> registerAd(T ad){
+    public ResponseEntity<?> registerAd(T ad, HttpServletRequest request){
+        //get uri of the request to send it to email template
+        String uriOfRequest = request.getRequestURI();
 
         //get user data from his Authentication to create a new annonce
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -67,6 +107,35 @@ public abstract class AdBaseController <T extends Advertisement,W extends Advert
             User user = (User) userOp.get();
             ad.setUser(user);
             repository.save(ad);
+
+            //send email to admin
+            List<String> imgUrl = new ArrayList<>();
+
+            if(ad.getImages() != null && ad.getImages().size()>0) {
+                for(Image img:ad.getImages()){
+                    imgUrl.add(img.getName());
+                }
+            }
+            try {
+                mailerService.preparingEmailAndSend(
+                        recipientAddress,
+                        "New ad sended",
+                        ad.getTitle(),
+                        ad.getDescription(),
+                        ad.getCategory().getTitle(),
+                        imgUrl,
+                        ad.getId(),
+                        uriOfRequest,
+                        SERVER_URL);
+            } catch (TemplateException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+
+
             return ResponseEntity.accepted().body(new ApiResponse(true,"sucess"));
         }
 
