@@ -53,17 +53,24 @@ public abstract class AdBaseController <T extends Advertisement,W extends Advert
         Optional<T> a = repository.findById(id);
 
         if (a.isPresent())
-            return ResponseEntity.accepted().body(a);
+            return ResponseEntity.ok().body(a);
         else
             return ResponseEntity.notFound().build();
     }
 
     @GetMapping
     //@Secured("ROLE_USER")
-    public Page getAllAds(@PageableDefault(size = 10, sort = "id") Pageable pageable){
+    public  ResponseEntity<?> getAllAds(@PageableDefault(size = 10, sort = "id") Pageable pageable){
+
 
         //get all validated ads
-        return repository.findAllByValidated(pageable, true);
+        Page page = repository.findAllByValidated(pageable, true);
+
+        if (page != null)
+            return ResponseEntity.ok().body(page);
+        else
+            return ResponseEntity.notFound().build();
+
     }
 
 
