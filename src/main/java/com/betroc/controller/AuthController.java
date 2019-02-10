@@ -54,23 +54,36 @@ public class AuthController {
 
 
     @PostMapping("/signin")
-    public LoginResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
-        //TODO if username or email does not exist then return not resgistred
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsernameOrEmail(),
-                        loginRequest.getPassword()
-                )
-        );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        if(userRepository.existsByUsername(loginRequest.getUsernameOrEmail()) || userRepository.existsByEmail(loginRequest.getUsernameOrEmail())) {
+            //TODO if username or email does not exist then return not resgistred
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getUsernameOrEmail(),
+                            loginRequest.getPassword()
+                    )
+            );
 
-        String jwt = tokenProvider.generateToken(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        long idUser = this.userRepository.findByUsernameOrEmail(loginRequest.getUsernameOrEmail(),
-                                                                loginRequest.getUsernameOrEmail()).get().getId();
-        return new LoginResponse(idUser,jwt );
+            String jwt = tokenProvider.generateToken(authentication);
+
+            long idUser = this.userRepository.findByUsernameOrEmail(loginRequest.getUsernameOrEmail(),
+                    loginRequest.getUsernameOrEmail()).get().getId();
+
+            return
+                    ResponseEntity.ok().body(new LoginResponse(idUser,jwt ));
+        }else if(!userRepository.existsByUsername(loginRequest.getUsernameOrEmail()))
+            return new ResponseEntity(new ApiResponse(false, "Username does not existe"),
+                    HttpStatus.NOT_FOUND);//we can note use ResponseEntity.notFound().found() because we need
+                                            // to send message and notFound does not support body()
+        else
+            return new ResponseEntity(new ApiResponse(false, "Email oes not existe"),
+                    HttpStatus.NOT_FOUND);
+
+
     }
 
     @PostMapping("/signup")
@@ -80,12 +93,12 @@ public class AuthController {
 
         if(userRepository.existsByUsername(signUpRequest.getUsername())) {
             return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
-                    HttpStatus.BAD_REQUEST);
+                    HttpStatus.CONFLICT);
         }
 
         if(userRepository.existsByEmail(signUpRequest.getEmail())) {
             return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
-                    HttpStatus.BAD_REQUEST);
+                    HttpStatus.FORBIDDEN);
         }
 
         //TODO exisitng mail or username but wrong password return wrong password
@@ -133,4 +146,33 @@ public class AuthController {
         }
 
     }
+
+//    @PostMapping("/signup/facebook")
+//    public ResponseEntity<?> registerUserFacebook(@Valid @RequestBody LoginFacebookRequest loginFacebookRequest, HttpServletRequest request) {
+//
+//        String urlToThisServlet = request.getRequestURL().substring(0,request.getRequestURL().length() - 7);
+//
+//
+//        if(userRepository.existsByEmail(loginFacebookRequest.getEmailFacebook())) {
+//            return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
+//                    HttpStatus.FORBIDDEN);
+//        }
+//
+//        //TODO exisitng mail or username but wrong password return wrong password
+//
+//        User user = new User(loginFacebookRequest.getIdNameFacebook().toString().toLowerCase(),loginFacebookRequest.getUserNameFacebook(),
+//                loginFacebookRequest.getEmailFacebook(),loginFacebookRequest.getIdNameFacebook()+loginFacebookRequest.getUserNameFacebook());
+//
+//
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//
+//        Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
+//                .orElseThrow(() -> new AppException("User Role not set."));
+//
+//        user.setRoles(Collections.singleton(userRole));
+//        user.setEnabled(true);
+//        User result = userRepository.save(user);//TODO if user not created exp and move it ti after email verification (next line) to catch the expetion if the mail was not sent because of a non valid mail
+//        return ResponseEntity.ok().build();
+//    }
+
 }

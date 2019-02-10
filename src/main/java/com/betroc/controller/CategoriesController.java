@@ -5,6 +5,7 @@ import com.betroc.payload.CategoriesRequest;
 import com.betroc.repository.CategoryRepository;
 import com.betroc.service.CategoriesService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,7 +24,7 @@ public class CategoriesController {
 
 
     @PostMapping("/setCategories")
-    public List<Category> getCategories(@Valid @RequestBody ArrayList<CategoriesRequest> categoriesRequest) {
+    public ResponseEntity<?> getCategories(@Valid @RequestBody ArrayList<CategoriesRequest> categoriesRequest) {
         List<Category> categories = new ArrayList<>();
         for(CategoriesRequest categoryRequest: categoriesRequest) {
             Category category = new Category();
@@ -34,16 +35,18 @@ public class CategoriesController {
             categories.add(category);
         }
         this.categoryRepository.saveAll(categories);
-        return categories;
+
+        return ResponseEntity.accepted().body(categories);
     }
 
 
     @GetMapping("/getCategories")
-    public List<Category> getCategories() {
+    public ResponseEntity<?> getCategories() {
 
         List<Category> categoryList = this.categoriesService.getAllCategories();
 
-        return categoryList;
+        return ResponseEntity.accepted().body(categoryList);
+
     }
 
 
