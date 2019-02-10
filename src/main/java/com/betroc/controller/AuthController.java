@@ -60,7 +60,7 @@ public class AuthController {
         if(userRepository.existsByUsername(loginRequest.getUsernameOrEmail())) {
             Optional<User> user = userRepository.findByUsernameOrEmail(loginRequest.getUsernameOrEmail(),loginRequest.getUsernameOrEmail().toString());
             if(!user.get().isEnabled())
-                return new ResponseEntity(new ApiResponse(false, "Nous avons un mail de confirmation à: \n" + user.get().getEmail() +"\n Veuillez confirmer votre compte"),
+                return new ResponseEntity(new ApiResponse(false, "Nous avons envoyé un mail de confirmation à: \n" + user.get().getEmail() +"\n Veuillez confirmer votre compte"),
                         HttpStatus.LOCKED);
         }
 
