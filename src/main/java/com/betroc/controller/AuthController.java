@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -56,6 +57,12 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
+        if(userRepository.existsByUsername(loginRequest.getUsernameOrEmail())) {
+            Optional<User> user = userRepository.findByUsernameOrEmail(loginRequest.getUsernameOrEmail(),loginRequest.getUsernameOrEmail().toString());
+            if(!user.get().isEnabled())
+                return new ResponseEntity(new ApiResponse(false, "Nous avons un mail de confirmation à: \n" + user.get().getEmail() +"\n Veuillez confirmer votre compte"),
+                        HttpStatus.LOCKED);
+        }
 
         if(userRepository.existsByUsername(loginRequest.getUsernameOrEmail()) || userRepository.existsByEmail(loginRequest.getUsernameOrEmail())) {
             //TODO if username or email does not exist then return not resgistred
