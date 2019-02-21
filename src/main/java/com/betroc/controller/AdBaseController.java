@@ -31,7 +31,7 @@ public abstract class AdBaseController <T extends Advertisement,W extends Advert
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getAd(@PathVariable("id") long id ){
-
+        //get Ad by id
         Optional<T> a = repository.findById(id);
 
         if (a.isPresent())
@@ -43,7 +43,7 @@ public abstract class AdBaseController <T extends Advertisement,W extends Advert
     @GetMapping
     //@Secured("ROLE_USER")
     public Page getAllAds(@PageableDefault(size = 10, sort = "id") Pageable pageable){
-
+        //get all adds
         return repository.findAll(pageable);
     }
 

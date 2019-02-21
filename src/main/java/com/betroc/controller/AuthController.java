@@ -57,12 +57,14 @@ public class AuthController {
     public LoginResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         //TODO if username or email does not exist then return not resgistred
+        //set an authentication
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getUsernameOrEmail(),
                         loginRequest.getPassword()
                 )
         );
+
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -78,28 +80,29 @@ public class AuthController {
 
         String urlToThisServlet = request.getRequestURL().substring(0,request.getRequestURL().length() - 7);
 
+        //check if the username already exist
         if(userRepository.existsByUsername(signUpRequest.getUsername())) {
             return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
                     HttpStatus.BAD_REQUEST);
         }
 
+        //check if yhr email already exist
         if(userRepository.existsByEmail(signUpRequest.getEmail())) {
             return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
                     HttpStatus.BAD_REQUEST);
         }
 
-        //TODO exisitng mail or username but wrong password return wrong password
-
+        //create a new user
         User user = new User(signUpRequest.getName(), signUpRequest.getUsername(),
                 signUpRequest.getEmail(), signUpRequest.getPassword());
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
+        //set user role to ROLE_USER by default
         Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
                 .orElseThrow(() -> new AppException("User Role not set."));
-
         user.setRoles(Collections.singleton(userRole));
 
+        //save the user and publish an OnRegistrationCompleteEvent to comfirm the new user name
         User result = userRepository.save(user);//TODO if user not created exp and move it ti after email verification (next line) to catch the expetion if the mail was not sent because of a non valid mail
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(result,urlToThisServlet));//TODO if there is a probleme in mail server don't register user
         return ResponseEntity.accepted().body(new ApiResponse(true, "User registered successfully please confirme"));
@@ -108,6 +111,7 @@ public class AuthController {
 
     @GetMapping("/confirmRegistrationOrEmailUpdate")
     public String confirmRegistrationOrEmailUpdate( @RequestParam("token") String token){
+        //check if the token exist
         VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
         if (verificationToken == null)
             return "BadUser invalidToken";
@@ -115,9 +119,11 @@ public class AuthController {
         User user = verificationToken.getUser();
         Calendar cal = Calendar.getInstance();
 
+        //check if the token still valid
         if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0)
             return "BadUser Token expired";
 
+        //this part it's for email update
         if (!verificationToken.getNewEmail().equals("")){//then it's a request for confirming an email update
 
             user.setEmail(verificationToken.getNewEmail());

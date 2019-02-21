@@ -24,7 +24,9 @@ public class CategoriesController {
 
     @PostMapping("/setCategories")
     public List<Category> getCategories(@Valid @RequestBody ArrayList<CategoriesRequest> categoriesRequest) {
+        //list of categories
         List<Category> categories = new ArrayList<>();
+        //add the categories list
         for(CategoriesRequest categoryRequest: categoriesRequest) {
             Category category = new Category();
             category.setDescription(categoryRequest.getDescription());

@@ -22,7 +22,6 @@ public class DonationAdController extends AdBaseController<DonationAd,DonationAd
 
     @GetMapping("/closet/lat/{lat}/long/{lng}")
     public Page getEchangeAdsByDistance(@PathVariable("lat") Double lat, @PathVariable("lng") Double lng ,@PageableDefault(size = 10, sort = "id") Pageable pageable){
-
         return this.repository.getAllByDistance(pageable ,lng,lat);
     }
 
