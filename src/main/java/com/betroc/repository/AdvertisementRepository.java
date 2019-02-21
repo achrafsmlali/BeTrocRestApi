@@ -8,4 +8,5 @@ import javax.transaction.Transactional;
 public interface AdvertisementRepository extends AdvertisementBaseRepository<Advertisement> {
 
     void deleteByUser_Id(long id);
+
 }

@@ -36,6 +36,9 @@ public abstract class Advertisement {
     @ManyToOne
     private Category category;
 
+
+    private boolean validated;
+
     @OneToMany(cascade = CascadeType.ALL,
     orphanRemoval = true
     )
@@ -111,6 +114,14 @@ public abstract class Advertisement {
 
     public void setImages(List<Image> images) {
         this.images = images;
+    }
+
+    public boolean isValidated() {
+        return validated;
+    }
+
+    public void setValidated(boolean validated) {
+        this.validated = validated;
     }
 
     @PrePersist

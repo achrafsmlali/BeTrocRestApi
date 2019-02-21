@@ -1,10 +1,7 @@
 package com.betroc.controller;
 
 import com.betroc.event.OnRegistrationCompleteEvent;
-import com.betroc.model.DonationAd;
-import com.betroc.model.DonationRequestAd;
-import com.betroc.model.ExchangeAd;
-import com.betroc.model.User;
+import com.betroc.model.*;
 import com.betroc.payload.ApiResponse;
 import com.betroc.payload.EmailUpdateRequest;
 import com.betroc.payload.PasswordUpdateRequest;
@@ -67,14 +64,16 @@ public class UserController {
 
         String username = userRepository.findById(id).get().getUsername();
         String email = userRepository.findById(id).get().getEmail();
-        List<DonationAd> donationAdsList = this.donationAdRepository.findAllByUser(userRepository.findById(id));
-        List<ExchangeAd> exchangeAList = this.exchangeAdRepository.findAllByUser(userRepository.findById(id));
-        List<DonationRequestAd> donationRequestAdList = this.donationRequestAdRepository.findAllByUser
-                                                                                            (userRepository.findById(id));
+        Image profileImage = userRepository.findById(id).get().getProfileImage();
+        List<DonationAd> donationAdsList = this.donationAdRepository.findAllByUserAndValidated(userRepository.findById(id), true);
+        List<ExchangeAd> exchangeAList = this.exchangeAdRepository.findAllByUserAndValidated(userRepository.findById(id), true);
+        List<DonationRequestAd> donationRequestAdList = this.donationRequestAdRepository.findAllByUserAndValidated
+                                                                                            (userRepository.findById(id), true);
         int nb_annonce = donationAdsList.size() + exchangeAList.size() + donationRequestAdList.size();
 
         profileResponse.setUsername(username);
         profileResponse.setEmail(email);
+        profileResponse.setProfileImage(profileImage);
         profileResponse.setDonationAds(donationAdsList);
         profileResponse.setDonationRequestAds(donationRequestAdList);
         profileResponse.setExchangeAds(exchangeAList);
@@ -203,10 +202,11 @@ public class UserController {
 
     }
 
-    @DeleteMapping
+    @PostMapping("/deleteAccount/{password}")
     @Transactional
-    public ResponseEntity deleteAccount(@RequestParam String password){
+    public ResponseEntity deleteAccount(@PathVariable String password){
 
+        System.out.println(password);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
 

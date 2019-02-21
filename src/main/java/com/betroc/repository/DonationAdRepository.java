@@ -13,8 +13,10 @@ import java.util.Optional;
 @Transactional
 public interface DonationAdRepository extends AdvertisementBaseRepository<DonationAd> {
 
-    List<DonationAd> findAllByUser(Optional<User> usr);
+    List<DonationAd> findAllByUserAndValidated(Optional<User> usr, boolean validated);
 
-    @Query("Select a From DonationAd a where a.latitude IS NOT NULL order by (pow((a.latitude - ?2),2) + pow((a.longitude - ?1),2)) ASC")
-    Page<DonationAd> getAllByDistance(Pageable pageable, Double longitude , Double latitude);
+    @Query("Select a From DonationAd a where a.validated =true and  a.latitude IS NOT NULL order by (pow((a.latitude - ?2),2) + pow((a.longitude - ?1),2)) ASC")
+    Page<DonationAd> getAllByDistanceAndValidated(Pageable pageable, Double longitude , Double latitude);
+
+
 }
