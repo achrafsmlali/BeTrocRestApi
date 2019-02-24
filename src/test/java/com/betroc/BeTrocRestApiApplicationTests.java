@@ -1,16 +1,17 @@
 package com.betroc;
 
+import com.betroc.controller.AuthControllerTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.runners.Suite;
+import org.springframework.test.context.TestPropertySource;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@RunWith(Suite.class)
+@Suite.SuiteClasses({AuthControllerTest.class})
+@TestPropertySource("classpath:/com/betroc/application.properties")
 public class BeTrocRestApiApplicationTests {
 
 	@Test
-	public void contextLoads() {// test do not pass because in application.properties datasource url must start with jdbc an im using environment variables
+	public void contextLoads() {
 	}
-
 }
