@@ -10,7 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class BeTrocRestApiApplicationTests {
 
 	@Test
-	public void contextLoads() {// test do not pass because in application.properties datasource url must start with jdbc an im using environment variables
+	public void first() {// test do not pass because in application.properties datasource url must start with jdbc an im using environment variables
 	}
 
 }

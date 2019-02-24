@@ -25,3 +25,7 @@
 /.nb-gradle/
 
 /uploads/
+
+## sonar ##
+.sonar
+.sonar/**
