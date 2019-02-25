@@ -14,7 +14,7 @@ public class EnityImageListener {
 
     @Autowired
     public void init(ImageStorageService imageStorageService) {
-        this.imageStorageService = imageStorageService;
+        EnityImageListener.imageStorageService = imageStorageService;
     }
 
     @PreRemove

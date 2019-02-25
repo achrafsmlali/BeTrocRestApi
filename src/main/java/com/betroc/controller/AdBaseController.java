@@ -84,7 +84,7 @@ public abstract class AdBaseController <T extends Advertisement,W extends Advert
                 ad.setValidated(true);
                 repository.save(ad);
                 return new ResponseEntity(new ApiResponse(true, "ad validate successfully"), HttpStatus.OK);
-            }else if(!validated){
+            }else{
                 repository.delete(ad);
                 return new ResponseEntity(new ApiResponse(true, "ad delete by the admin"), HttpStatus.OK);
             }
@@ -134,11 +134,7 @@ public abstract class AdBaseController <T extends Advertisement,W extends Advert
                         ad.getId(),
                         uriOfRequest,
                         SERVER_URL);
-            } catch (TemplateException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (MessagingException e) {
+            } catch (TemplateException | IOException | MessagingException e) {
                 e.printStackTrace();
             }
 
